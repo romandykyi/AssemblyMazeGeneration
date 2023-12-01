@@ -88,6 +88,7 @@ void generate_maze_sidewinder(uint8_t* const maze, const uint32_t width, const u
 		xor ebx, ebx
 		// Counter(width - 1 to 0)
 		mov ecx, width
+		sub ecx, 1
 		
 		l2:
 			cmp ecx, 0
