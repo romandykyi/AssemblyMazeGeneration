@@ -4,8 +4,8 @@
 #include <time.h>
 #include "maze_generation.h"
 
-#define MAZE_WIDTH 5
-#define MAZE_HEIGHT 5
+#define MAZE_WIDTH 15
+#define MAZE_HEIGHT 15
 
 //void generate_maze(char maze[MAZE_SIZE])
 //{
@@ -134,6 +134,10 @@ int main()
 	uint8_t* maze = (uint8_t*)malloc(maze_size);
 	memset(maze, BOTH_WALLS, maze_size);
 	generate_maze_sidewinder(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	print_maze(maze, MAZE_WIDTH, MAZE_HEIGHT);
+
+	memset(maze, BOTH_WALLS, maze_size);
+	generate_maze_binary_tree(maze, MAZE_WIDTH, MAZE_HEIGHT);
 	print_maze(maze, MAZE_WIDTH, MAZE_HEIGHT);
 
 	free(maze);

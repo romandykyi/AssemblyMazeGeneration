@@ -6,7 +6,7 @@ void generate_maze_binary_tree(uint8_t* const maze, const uint32_t width, const 
 		mov edx, width
 		// Counter(width - 1 to 0)
 		mov ecx, edx
-		sub ecx, 1
+		dec ecx
 		// Start index
 		mov esi, maze
 		// Index of the last cell without the last row
@@ -30,7 +30,7 @@ void generate_maze_binary_tree(uint8_t* const maze, const uint32_t width, const 
 			mov ebx, 2
 			div ebx
 			// Edx is either RIGHT_PASSAGE or BOTTOM_PASSAGE
-			add edx, 1
+			inc edx
 			mov [esi], edx
 			pop ecx // Get ecx back
 			jmp condition
@@ -49,7 +49,7 @@ void generate_maze_binary_tree(uint8_t* const maze, const uint32_t width, const 
 		mov esi, edi
 		// Index of the second from the end cell
 		add edi, width
-		sub edi, 1
+		dec edi
 		l2:
 			mov [esi], RIGHT_PASSAGE
 			inc esi
@@ -88,15 +88,35 @@ void generate_maze_sidewinder(uint8_t* const maze, const uint32_t width, const u
 		xor ebx, ebx
 		// Counter(width - 1 to 0)
 		mov ecx, width
-		sub ecx, 1
+		dec ecx
 		
 		l2:
+			// Add current cell to the run
+			push esi
+			inc ebx
+
+			// Check if current cell is last in the row
 			cmp ecx, 0
 			je new_row
 
-			push esi
-			inc ebx
-			jmp clear_run
+			// Save the counter and the number of cells 
+			push ecx
+			push ebx
+			// Get a random boolean(0 or 1)
+			call rand
+			mov ebx, 2
+			xor edx, edx
+			div ebx
+			// Get values back from the stack
+			pop ebx
+			pop ecx
+
+			// Clear the run with 50% probability
+			test edx, 1
+			je clear_run
+			// Or carve a right passage
+			or [esi], RIGHT_PASSAGE
+			jmp condition
 
 		new_row:
 			mov ecx, width
