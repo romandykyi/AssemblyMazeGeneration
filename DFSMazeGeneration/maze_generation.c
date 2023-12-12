@@ -26,12 +26,10 @@ void generate_maze_binary_tree(uint8_t* const maze, const uint32_t width, const 
 			push ecx // Save ecx
 			// "Flip a coin"
 			call rand
-			xor edx, edx
-			mov ebx, 2
-			div ebx
-			// Edx is either RIGHT_PASSAGE or BOTTOM_PASSAGE
-			inc edx
-			mov [esi], edx
+			and eax, 1 // Modulo of 2
+			// Eax is either RIGHT_PASSAGE or BOTTOM_PASSAGE
+			inc eax
+			mov [esi], eax
 			pop ecx // Get ecx back
 			jmp condition
 		carve_bottom :
