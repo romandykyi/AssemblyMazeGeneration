@@ -99,20 +99,15 @@ void generate_maze_sidewinder(uint8_t* const maze, const uint32_t width, const u
 			cmp ecx, 0
 			je new_row
 
-			// Save the counter and the number of cells 
+			// Save the counter before calling rand 
 			push ecx
-			push ebx
-			// Get a random boolean(0 or 1)
+			// Get a random number
 			call rand
-			mov ebx, 2
-			xor edx, edx
-			div ebx
-			// Get values back from the stack
-			pop ebx
+			// Get the counter back from the stack
 			pop ecx
 
 			// Clear the run with 50% probability
-			test edx, 1
+			test eax, 1
 			je clear_run
 			// Or carve a right passage
 			or [esi], RIGHT_PASSAGE
@@ -123,13 +118,11 @@ void generate_maze_sidewinder(uint8_t* const maze, const uint32_t width, const u
 		clear_run:
 			cmp ebx, 0
 			je condition
-			// Save the counter and the number of cells 
+			// Save the counter before calling rand 
 			push ecx
-			push ebx
-			// Choose a random cell for which top passage will be carved
+			// Get a random number
 			call rand
-			// Get values back from the stack
-			pop ebx
+			// Get the counter back from the stack
 			pop ecx
 			// Random cell is at edx:
 			xor edx, edx
