@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-void generate_maze_binary_tree(uint8_t* const maze, const uint32_t width, const uint32_t height);
+void generateMazeBinaryTree(uint8_t* const maze, const uint32_t width, const uint32_t height);
 
-void generate_maze_sidewinder(uint8_t* const maze, const uint32_t width, const uint32_t height);
+void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uint32_t height);
+
+void generateMazeAldousBroder(uint8_t* const maze, const uint32_t width, const uint32_t height);

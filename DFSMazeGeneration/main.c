@@ -7,7 +7,7 @@
 #define MAZE_WIDTH 15
 #define MAZE_HEIGHT 15
 
-void print_maze(uint8_t* const maze, const uint8_t width, const uint8_t height)
+void printMaze(uint8_t* const maze, const uint8_t width, const uint8_t height)
 {
 	printf("_");
 	for (size_t j = 0; j < width; j++)
@@ -44,19 +44,19 @@ int main()
 {
 	srand(time(NULL));
 
-	size_t maze_size = MAZE_WIDTH * MAZE_HEIGHT * sizeof(uint8_t);
-	uint8_t* maze = (uint8_t*)malloc(maze_size);
+	size_t mazeSize = MAZE_WIDTH * MAZE_HEIGHT * sizeof(uint8_t);
+	uint8_t* maze = (uint8_t*)malloc(mazeSize);
 	
 	printf("Sidewinder:\n");
-	memset(maze, BOTH_WALLS, maze_size);
-	generate_maze_sidewinder(maze, MAZE_WIDTH, MAZE_HEIGHT);
-	print_maze(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	memset(maze, BOTH_WALLS, mazeSize);
+	generateMazeSidewinder(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
 
 	printf("\n");
 	printf("Binary tree:\n");
-	memset(maze, BOTH_WALLS, maze_size);
-	generate_maze_binary_tree(maze, MAZE_WIDTH, MAZE_HEIGHT);
-	print_maze(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	memset(maze, BOTH_WALLS, mazeSize);
+	generateMazeBinaryTree(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
 
 	free(maze);
 	system("pause");
