@@ -9,8 +9,8 @@
 
 void printMaze(uint8_t* const maze, const uint8_t width, const uint8_t height)
 {
-	printf("_");
-	for (size_t j = 0; j < width; j++)
+	printf("  _");
+	for (size_t j = 1; j < width; j++)
 	{
 		printf("__");
 	}
@@ -20,6 +20,11 @@ void printMaze(uint8_t* const maze, const uint8_t width, const uint8_t height)
 		printf("|");
 		for (size_t j = 0; j < width; j++)
 		{
+			if (i == height - 1 && j == width - 1)
+			{
+				printf(" |");
+				break;
+			}
 			switch (maze[i * width + j])
 			{
 			case BOTH_WALLS:
