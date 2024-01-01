@@ -46,16 +46,16 @@ int main()
 
 	size_t mazeSize = MAZE_WIDTH * MAZE_HEIGHT * sizeof(uint8_t);
 	uint8_t* maze = (uint8_t*)malloc(mazeSize);
-	
-	printf("Sidewinder:\n");
-	memset(maze, BOTH_WALLS, mazeSize);
-	generateMazeSidewinder(maze, MAZE_WIDTH, MAZE_HEIGHT);
-	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
 
 	printf("\n");
 	printf("Binary tree:\n");
 	memset(maze, BOTH_WALLS, mazeSize);
 	generateMazeBinaryTree(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	
+	printf("\nSidewinder:\n");
+	memset(maze, BOTH_WALLS, mazeSize);
+	generateMazeSidewinder(maze, MAZE_WIDTH, MAZE_HEIGHT);
 	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
 
 	free(maze);
