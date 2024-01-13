@@ -19,7 +19,7 @@ void generateMazeBinaryTree(uint8_t* const maze, const uint32_t width, const uin
 		add edi, eax
 
 		l1 :
-		cmp ecx, 0
+			cmp ecx, 0
 			je carve_bottom
 
 			// Carve right or bottom passage
@@ -27,29 +27,29 @@ void generateMazeBinaryTree(uint8_t* const maze, const uint32_t width, const uin
 			// "Flip a coin"
 			call rand
 			and eax, 1 // Modulo of 2
-			// Eax is either RIGHT_PASSAGE or BOTTOM_PASSAGE
+			// Add 1 to make eax either RIGHT_PASSAGE(1) or BOTTOM_PASSAGE(2)
 			inc eax
-			mov[esi], eax
+			mov [esi], eax
 			pop ecx // Get ecx back
 			jmp condition
 			carve_bottom :
-		mov[esi], BOTTOM_PASSAGE
+			mov [esi], BOTTOM_PASSAGE
 			mov ecx, width
 
 			condition :
-		dec ecx
+			dec ecx
 			inc esi
 			cmp esi, edi
 			jl l1
 
-			// Carve right walls at the last row
-			// Start index
-			mov esi, edi
-			// Index of the second from the end cell
-			add edi, width
-			dec edi
-			l2 :
-		mov[esi], RIGHT_PASSAGE
+		// Carve right walls at the last row
+		// Start index
+		mov esi, edi
+		// Index of the second from the end cell
+		add edi, width
+		dec edi
+		l2 :
+			mov [esi], RIGHT_PASSAGE
 			inc esi
 			cmp esi, edi
 			jl l2
@@ -75,22 +75,22 @@ void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uin
 
 		// Carve right walls in the first row
 		l1 :
-		mov[esi], RIGHT_PASSAGE
+			mov[esi], RIGHT_PASSAGE
 			inc esi
 			loop l1
 
-			// Skip the last cell in the first row
-			inc esi
+		// Skip the last cell in the first row
+		inc esi
 
-			// Number of cells in the current run
-			xor ebx, ebx
-			// Counter(width - 1 to 0)
-			mov ecx, width
-			dec ecx
+		// Number of cells in the current run
+		xor ebx, ebx
+		// Counter(width - 1 to 0)
+		mov ecx, width
+		dec ecx
 
-			l2 :
-		// Add current cell to the run
-		push esi
+		l2 :
+			// Add current cell to the run
+			push esi
 			inc ebx
 
 			// Check if current cell is last in the row
@@ -112,9 +112,9 @@ void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uin
 			jmp condition
 
 			new_row :
-		mov ecx, width
+			mov ecx, width
 			clear_run :
-		cmp ebx, 0
+			cmp ebx, 0
 			je condition
 			// Save the counter before calling rand 
 			push ecx
@@ -127,7 +127,7 @@ void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uin
 			div ebx
 			// A loop from ebx-1 to 0
 			pop_cells :
-		dec ebx
+			dec ebx
 			// Pop a cell
 			pop eax
 			// If it's the selected cell
@@ -138,11 +138,11 @@ void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uin
 			or [eax], BOTTOM_PASSAGE
 
 			pop_cells_condition :
-		cmp ebx, 0
+			cmp ebx, 0
 			jg pop_cells
 
 			condition :
-		dec ecx
+			dec ecx
 			inc esi
 			cmp esi, edi
 			jl l2
