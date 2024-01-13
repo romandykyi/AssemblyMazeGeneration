@@ -22,7 +22,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{1925f721-9e84-4a9d-bdd0-e0d8f3dd995e}</ProjectGuid>
-    <RootNamespace>DFSMazeGeneration</RootNamespace>
+    <RootNamespace>AssemblyMazeGeneration</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>AssemblyMazeGeneration</ProjectName>
   </PropertyGroup>
