@@ -4,6 +4,11 @@
 #include <time.h>
 #include "maze_generation.h"
 
+#define MIN_WIDTH 3
+#define MIN_HEIGHT 3
+#define MAX_WIDTH 100
+#define MAX_HEIGHT 100
+
 void printMaze(uint8_t* const maze, const uint8_t width, const uint8_t height)
 {
 	printf("  _");
@@ -42,15 +47,30 @@ void printMaze(uint8_t* const maze, const uint8_t width, const uint8_t height)
 	}
 }
 
-int main()
+int main(int argc, char** argv)
 {
-	srand(time(NULL));
+	if (argc != 3 && argc != 4)
+	{
+		fprintf(stderr, "Usage: '%s [width: %d-%d] [height: %d-%d] [optional seed]'\n", argv[0],
+			MIN_WIDTH, MAX_WIDTH, MIN_HEIGHT, MAX_HEIGHT);
+		return 1;
+	}
+	
 
-	int width, height;
-	printf("Width: ");
-	scanf_s("%d", &width);
-	printf("Height: ");
-	scanf_s("%d", &height);
+	int width = atoi(argv[1]);
+	if (width < MIN_WIDTH || width > MAX_WIDTH)
+	{
+		fprintf(stderr, "Invalid width\n");
+		return 1;
+	}
+	int height = atoi(argv[2]);
+	if (height < MIN_HEIGHT || height > MAX_HEIGHT)
+	{
+		fprintf(stderr, "Invalid height\n");
+		return 1;
+	}
+
+	srand(argc == 4 ? atoi(argv[3]) : time(NULL));
 
 	size_t mazeSize = width * height * sizeof(uint8_t);
 	uint8_t* maze = (uint8_t*)malloc(mazeSize);
