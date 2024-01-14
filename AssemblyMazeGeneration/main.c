@@ -4,9 +4,6 @@
 #include <time.h>
 #include "maze_generation.h"
 
-#define MAZE_WIDTH 45
-#define MAZE_HEIGHT 45
-
 void printMaze(uint8_t* const maze, const uint8_t width, const uint8_t height)
 {
 	printf("  _");
@@ -49,26 +46,31 @@ int main()
 {
 	srand(time(NULL));
 
-	size_t mazeSize = MAZE_WIDTH * MAZE_HEIGHT * sizeof(uint8_t);
+	int width, height;
+	printf("Width: ");
+	scanf_s("%d", &width);
+	printf("Height: ");
+	scanf_s("%d", &height);
+
+	size_t mazeSize = width * height * sizeof(uint8_t);
 	uint8_t* maze = (uint8_t*)malloc(mazeSize);
 
 	printf("\n");
 	printf("Binary tree:\n");
 	memset(maze, BOTH_WALLS, mazeSize);
-	generateMazeBinaryTree(maze, MAZE_WIDTH, MAZE_HEIGHT);
-	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	generateMazeBinaryTree(maze, width, height);
+	printMaze(maze, width, height);
 	
 	printf("\nSidewinder:\n");
 	memset(maze, BOTH_WALLS, mazeSize);
-	generateMazeSidewinder(maze, MAZE_WIDTH, MAZE_HEIGHT);
-	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	generateMazeSidewinder(maze, width, height);
+	printMaze(maze, width, height);
 	
 	printf("\nRandomized DFS:\n");
 	memset(maze, BOTH_WALLS, mazeSize);
-	generateMazeDfs(maze, MAZE_WIDTH, MAZE_HEIGHT);
-	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	generateMazeDfs(maze, width, height);
+	printMaze(maze, width, height);
 
 	free(maze);
-	system("pause");
 	return 0;
 }
