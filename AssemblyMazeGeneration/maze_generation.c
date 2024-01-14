@@ -189,14 +189,15 @@ void generateMazeDfs(uint8_t* const maze, const uint32_t width, const uint32_t h
 		xor ecx, ecx
 		xor edx, edx
 		mov ebx, width
-		// currentCell / width, currentCell % width
+		// eax = row = currentCell / width
+		// edx = column = currentCell % width
 		div ebx
 		// Get current cell back
 		pop ebx
 
 		// Get left neighbor
 		dec ebx
-		// Left neighbor exists if edx != 0
+		// Left neighbor exists if column != 0
 		cmp edx, 0
 		je skip_left
 			// Check if is unvisited
@@ -214,7 +215,7 @@ void generateMazeDfs(uint8_t* const maze, const uint32_t width, const uint32_t h
 
 		// Get right neighbor
 		inc ebx
-		// Right neighbor exists if edx != width - 1 -> edx + 1 != width
+		// Right neighbor exists if column != width - 1 -> column + 1 != width
 		inc edx
 		cmp edx, width
 		je skip_right
@@ -236,7 +237,7 @@ void generateMazeDfs(uint8_t* const maze, const uint32_t width, const uint32_t h
 
 		// Get top neighbor
 		sub ebx, edx
-		// Top neighbor exists if eax != 0
+		// Top neighbor exists if row != 0
 		cmp eax, 0
 		je skip_top
 			// Check if is unvisited
@@ -254,7 +255,7 @@ void generateMazeDfs(uint8_t* const maze, const uint32_t width, const uint32_t h
 
 		// Get bottom neighbor
 		add ebx, edx
-		// Bottom neighbor exists if eax != height - 1 -> eax + 1 != height
+		// Bottom neighbor exists if row != height - 1 -> row + 1 != height
 		inc eax
 		cmp eax, height
 		je skip_bottom
