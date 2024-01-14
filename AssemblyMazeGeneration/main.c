@@ -4,8 +4,8 @@
 #include <time.h>
 #include "maze_generation.h"
 
-#define MAZE_WIDTH 15
-#define MAZE_HEIGHT 15
+#define MAZE_WIDTH 45
+#define MAZE_HEIGHT 45
 
 void printMaze(uint8_t* const maze, const uint8_t width, const uint8_t height)
 {
@@ -61,6 +61,11 @@ int main()
 	printf("\nSidewinder:\n");
 	memset(maze, BOTH_WALLS, mazeSize);
 	generateMazeSidewinder(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
+	
+	printf("\nRandomized DFS:\n");
+	memset(maze, BOTH_WALLS, mazeSize);
+	generateMazeDfs(maze, MAZE_WIDTH, MAZE_HEIGHT);
 	printMaze(maze, MAZE_WIDTH, MAZE_HEIGHT);
 
 	free(maze);

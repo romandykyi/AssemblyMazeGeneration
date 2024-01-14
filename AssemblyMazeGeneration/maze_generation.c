@@ -75,7 +75,7 @@ void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uin
 
 		// Carve right walls in the first row
 		l1 :
-			mov[esi], RIGHT_PASSAGE
+			mov [esi], RIGHT_PASSAGE
 			inc esi
 			loop l1
 
@@ -147,4 +147,218 @@ void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uin
 			cmp esi, edi
 			jl l2
 	}
+}
+
+void generateMazeDfs(uint8_t* const maze, const uint32_t width, const uint32_t height)
+{
+	// Allocate an array for saving cells state(visited/unvisited)
+	int mazeSize = width * height * sizeof(uint8_t);
+	uint8_t* visited = (uint8_t*)malloc(mazeSize);
+	memset(visited, UNVISITED, mazeSize);
+
+	__asm {
+		// EDI - State of cells
+		mov edi, visited
+
+		// Pick a random cell
+		call rand
+		// Perform modulo operation
+		xor edx, edx
+		mov ebx, mazeSize
+		div ebx
+		// Push random cell into stack
+		push edx
+		// And mark it as visited
+		mov esi, edi
+		add esi, edx
+		mov [esi], VISITED
+		// ECX - Size of a stack
+		mov ecx, 1
+
+		l:
+		// Pop a cell from the stack
+		pop ebx
+		dec ecx
+		// Preserve stack size
+		push ecx
+		// Preserve current cell
+		push ebx
+		mov eax, ebx
+
+		// Find unvisited neighbors of a cell(ecx is a number of such cells)
+		xor ecx, ecx
+		xor edx, edx
+		mov ebx, width
+		// currentCell / width, currentCell % width
+		div ebx
+		// Get current cell back
+		pop ebx
+
+		// Get left neighbor
+		dec ebx
+		// Left neighbor exists if edx != 0
+		cmp edx, 0
+		je skip_left
+			// Check if is unvisited
+			mov esi, edi
+			add esi, ebx
+			cmp [esi], VISITED
+			je skip_left
+
+			// Push left cell
+			push LEFT_CELL
+			inc ecx
+		skip_left:
+		// Return ebx to its previous state
+		inc ebx
+
+		// Get right neighbor
+		inc ebx
+		// Right neighbor exists if edx != width - 1 -> edx + 1 != width
+		inc edx
+		cmp edx, width
+		je skip_right
+			// Check if is unvisited
+			mov esi, edi
+			add esi, ebx
+			cmp [esi], VISITED
+			je skip_right
+
+			// Push right cell
+			push RIGHT_CELL
+			inc ecx
+		skip_right:
+		// Return ebx to its previous state
+		dec ebx
+
+		// EDX is now free to use, so use it to save width
+		mov edx, width
+
+		// Get top neighbor
+		sub ebx, edx
+		// Top neighbor exists if eax != 0
+		cmp eax, 0
+		je skip_top
+			// Check if is unvisited
+			mov esi, edi
+			add esi, ebx
+			cmp [esi], VISITED
+			je skip_top
+
+			// Push top cell
+			push TOP_CELL
+			inc ecx
+		skip_top:
+		// Return ebx to its previous state
+		add ebx, edx
+
+		// Get bottom neighbor
+		add ebx, edx
+		// Bottom neighbor exists if eax != height - 1 -> eax + 1 != height
+		inc eax
+		cmp eax, height
+		je skip_bottom
+			// Check if is unvisited
+			mov esi, edi
+			add esi, ebx
+			cmp [esi], VISITED
+			je skip_bottom
+
+			// Push bottom cell
+			push BOTTOM_CELL
+			inc ecx
+		skip_bottom:
+		// Return ebx to its previous state
+		sub ebx, edx
+
+		// Skip if there is no unvisited neighbors(prevent zero division error)
+		cmp ecx, 0
+		je no_neighbors
+
+		// Save the current cell to push it to the stack later
+		mov edi, ebx
+
+		// Select a random cell
+		push ecx
+		call rand
+		pop ecx
+		xor edx, edx
+		div ecx // Index of a chosen cell(in a neighbors stack) is at edx
+
+		// Get a choosen cell and empty a neighbors stack
+		empty_stack:
+			dec ecx
+			pop eax
+
+			// If cell is the chosen
+			cmp ecx, edx
+			jne sub_condition
+			mov esi, maze
+			// Determine index of the chosen cell
+			cmp eax, LEFT_CELL
+			je left_c 
+			cmp eax, RIGHT_CELL
+			je right_c 
+			cmp eax, TOP_CELL
+			je top_c 
+			// Default case: bottom cell
+				// Remove a wall between cells
+				add esi, ebx
+				or [esi], BOTTOM_PASSAGE
+				add ebx, width
+				jmp sub_condition
+
+			left_c:
+				dec ebx
+				// Remove a wall between cells
+				add esi, ebx
+				or [esi], RIGHT_PASSAGE
+				jmp sub_condition
+			right_c:
+				// Remove a wall between cells
+				add esi, ebx
+				or [esi], RIGHT_PASSAGE
+				inc ebx
+				jmp sub_condition
+			top_c:
+				sub ebx, width
+				// Remove a wall between cells
+				add esi, ebx
+				or [esi], BOTTOM_PASSAGE
+				jmp sub_condition
+
+			sub_condition:
+
+			// While neighbors stack is not empty
+			cmp ecx, 0
+			jg empty_stack
+
+		// Get stack size back
+		pop ecx
+		// Push the current cell to the stack
+		push edi
+		// Return edi to its previous state
+		mov edi, visited
+		// Mark the chosen cell as visited
+		mov esi, edi
+		add esi, ebx
+		mov [esi], VISITED
+		// Push it to the stack
+		push ebx
+		// Update stack size
+		add ecx, 2
+		jmp main_condition
+
+		no_neighbors:
+		// Get stack size back
+		pop ecx
+
+		main_condition:
+		// While stack is not empty
+		cmp ecx, 0
+		jg l
+	}
+
+	// Deallocate memory
+	free(visited);
 }

@@ -6,3 +6,5 @@
 void generateMazeBinaryTree(uint8_t* const maze, const uint32_t width, const uint32_t height);
 
 void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uint32_t height);
+
+void generateMazeDfs(uint8_t* const maze, const uint32_t width, const uint32_t height);
