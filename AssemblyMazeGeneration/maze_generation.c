@@ -3,38 +3,43 @@
 void generateMazeBinaryTree(uint8_t* const maze, const uint32_t width, const uint32_t height)
 {
 	__asm {
-		mov edx, width
-		// Counter(width - 1 to 0)
-		mov ecx, edx
-		dec ecx
+		// Counter
+		mov ecx, width
 		// Start index
 		mov esi, maze
 		// Index of the last cell without the last row
 		mov edi, esi
 		// width * (height - 1)
-		mov eax, edx
+		mov eax, ecx
 		mov ebx, height
 		sub ebx, 1
 		mul ebx
 		add edi, eax
+		mov edx, ecx
+		// Counter(width - 1 to 0)
+		dec ecx
 
 		l1 :
 			cmp ecx, 0
 			je carve_bottom
 
 			// Carve right or bottom passage
-			push ecx // Save ecx
+			// Save ecx and edx
+			push ecx 
+			push edx
 			// "Flip a coin"
 			call rand
 			and eax, 1 // Modulo of 2
 			// Add 1 to make eax either RIGHT_PASSAGE(1) or BOTTOM_PASSAGE(2)
 			inc eax
 			mov [esi], eax
-			pop ecx // Get ecx back
+			// Get ecx and edx back
+			pop edx
+			pop ecx 
 			jmp condition
 			carve_bottom :
 			mov [esi], BOTTOM_PASSAGE
-			mov ecx, width
+			mov ecx, edx
 
 			condition :
 			dec ecx
@@ -46,7 +51,7 @@ void generateMazeBinaryTree(uint8_t* const maze, const uint32_t width, const uin
 		// Start index
 		mov esi, edi
 		// Index of the second from the end cell
-		add edi, width
+		add edi, edx
 		dec edi
 		l2 :
 			mov [esi], RIGHT_PASSAGE
@@ -59,6 +64,8 @@ void generateMazeBinaryTree(uint8_t* const maze, const uint32_t width, const uin
 void generateMazeSidewinder(uint8_t* const maze, const uint32_t width, const uint32_t height)
 {
 	__asm {
+		// Counter
+		mov ecx, width
 		mov edx, width
 		// Counter(width - 1 to 0)
 		mov ecx, width
