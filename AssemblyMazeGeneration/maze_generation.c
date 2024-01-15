@@ -286,7 +286,7 @@ void generateMazeDfs(uint8_t* const maze, const uint32_t width, const uint32_t h
 		xor edx, edx
 		div ecx // Index of a chosen cell(in a neighbors stack) is at edx
 
-		// Get a choosen cell and empty a neighbors stack
+		// Get a chosen cell and empty a neighbors stack
 		empty_stack:
 			dec ecx
 			pop eax
@@ -326,7 +326,6 @@ void generateMazeDfs(uint8_t* const maze, const uint32_t width, const uint32_t h
 				// Remove a wall between cells
 				add esi, ebx
 				or [esi], BOTTOM_PASSAGE
-				jmp sub_condition
 
 			sub_condition:
 
