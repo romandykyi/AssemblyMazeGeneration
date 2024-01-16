@@ -9,7 +9,7 @@
 #define MAX_WIDTH 100
 #define MAX_HEIGHT 100
 
-void printMaze(uint8_t* const maze, const uint8_t width, const uint8_t height)
+void printMaze(uint8_t* const maze, const uint32_t width, const uint32_t height)
 {
 	printf("  _");
 	for (size_t j = 1; j < width; j++)
